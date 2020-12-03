@@ -1,6 +1,6 @@
 import React from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import AddPlacePopup from "./AddPlacePopup";
@@ -14,8 +14,34 @@ import ImagePopup from "./ImagePopup";
 import Login from "./Login";
 import Register from "./Register";
 import api from "../utils/Api.js";
+import * as auth from "../utils/auth.js";
 
 function App() {
+  /* Авторизация/регистрация */
+  const [loggedIn, setLoggedIn] = React.useState(false);
+  const [userData, setUserData] = React.useState([]);
+
+  const handleRegister = (password, email) => {
+    console.log(password, email);
+    auth
+      .register(password, email)
+      .then((data) => {
+        console.log(data.data._id)
+
+        if(data.data._id) {
+          setUserData({
+            email: data.data.email
+          })
+          setLoggedIn(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    /* let history = useHistory();
+    history.push("/signin"); */
+  };
+
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -130,12 +156,10 @@ function App() {
     setIsAddPlacePopupOpen(false);
   }
 
-  const loggedIn = false;
-
   return (
     <div className="page">
-      <Header />
-      
+      <Header email={userData.email}/>
+
       <Switch>
         <CurrentUserContext.Provider value={currentUser}>
           <ProtectedRoute
@@ -156,7 +180,7 @@ function App() {
           </Route>
 
           <Route path="/signup">
-            <Register />
+            <Register handleRegister={handleRegister} />
           </Route>
           <InfoTooltip />
           <Route>{loggedIn ? <Redirect to="/home" /> : <Redirect to="/signin" />}</Route>

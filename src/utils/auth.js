@@ -7,39 +7,23 @@ export const register = (password, email) => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ password, email }),
-  })
-    .then((response) => {
-      try {
-        if (response.status === 200) {
-          return response.json();
-        }
-      } catch (e) {
-        return e;
-      }
-    })
+    body: JSON.stringify({ password: password, email: email }),
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
 
-    .catch((err) => console.log(err));
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 };
 
-export const login = (password, email) => {
-    return fetch(`${BASE_URL}/signin`, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password, email }),
-      })
-        .then((response) => {
-          try {
-            if (response.status === 200) {
-              return response.json();
-            }
-          } catch (e) {
-            return e;
-          }
-        })
-    
-        .catch((err) => console.log(err));
-}
+export const login = (identifier, password) => {
+  return fetch(`${BASE_URL}/signin`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ identifier, password }),
+  }).then((response) => response.json());
+};

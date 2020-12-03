@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import * as auth from "../utils/auth.js";
 
-export default function Login() {
+export default function Register({ handleRegister }) {
   const [data, setData] = React.useState({ password: "", email: "" });
 
   const handleChange = (e) => {
@@ -16,7 +15,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    auth.register(password, email);
+    handleRegister(password, email);
   };
 
   return (
