@@ -1,6 +1,7 @@
 # Mesto Russia.
 
 ## Портировал проект [Mesto](https://github.com/AndryushaYP/mesto) на React.
+## Добавил регистрацию и авторизацию
 
 ## Технологии:
 
@@ -14,4 +15,4 @@
 * ООП
 * Webpack
 
-[Mesto-React](https://andryushayp.github.io/mesto-react/)
+[Mesto-React](https://andryushayp.github.io/react-mesto-auth/)
