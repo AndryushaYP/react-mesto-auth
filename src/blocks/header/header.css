@@ -1,5 +1,10 @@
-@import url(../header/__logo/header__logo.css);
-@import url(../header/__button/header__button.css);
+@import url(./__logo/header__logo.css);
+@import url(./__button/_type/header__button_type_visible.css);
+@import url(./__button/_type/header__button_type_invisible.css);
+@import url(./__button/header__button.css);
+@import url(./__button/header__button-grey.css);
+@import url(./__email/header__email.css);
+
 
 .header {
     margin: 0 auto;

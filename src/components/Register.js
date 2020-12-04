@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Register({ handleRegister }) {
+export default function Register({ onRegister }) {
   const [data, setData] = React.useState({ password: "", email: "" });
 
   const handleChange = (e) => {
@@ -15,7 +15,7 @@ export default function Register({ handleRegister }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    handleRegister(password, email);
+    onRegister(password, email);
   };
 
   return (

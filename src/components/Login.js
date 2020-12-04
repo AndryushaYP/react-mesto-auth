@@ -1,7 +1,6 @@
 import React from "react";
-import * as auth from "../utils/auth.js";
 
-export default function Login({ handleLogin }) {
+export default function Login({ onLogin }) {
   const [data, setData] = React.useState({ password: "", email: "" });
 
   const handleChange = (e) => {
@@ -15,7 +14,7 @@ export default function Login({ handleLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    handleLogin(password, email);
+    onLogin(password, email);
   };
 
   return (

@@ -19,7 +19,7 @@ import * as auth from "../utils/auth.js";
 function App() {
   /* Авторизация/регистрация */
   const [loggedIn, setLoggedIn] = React.useState(false);
-  const [userData, setUserData] = React.useState([]);
+  const [userData, setUserData] = React.useState({});
   const history = useHistory();
 
   React.useEffect(() => {
@@ -28,34 +28,32 @@ function App() {
 
   const handleRegister = (password, email) => {
     console.log(password, email);
+
     auth
       .register(password, email)
       .then((data) => {
-        console.log(data.data._id);
-
+        setInfoTooltipOpen(true);
         if (data.data.email) {
-          setUserData({
-            email: data.data.email,
-          });
+          setUserData({ email: data.data.email });
           history.push("/signin");
         }
       })
       .catch((err) => {
+        setInfoTooltipOpen(true);
         console.log(err);
       });
   };
 
   const handleLogin = (password, email) => {
     console.log(password, email);
+    setUserData({ email: email });
     auth
       .login(password, email)
       .then((data) => {
         if (data.token) {
-          console.log(data.token);
           localStorage.setItem("jwt", data.token);
           setLoggedIn(true);
           history.push("/home");
-          console.log(userData.email);
         }
       })
       .catch((err) => {
@@ -67,20 +65,25 @@ function App() {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       auth.getContent(jwt).then((res) => {
-        console.log(res);
-        setUserData({
-          email: res.data.email,
-        });
-        setLoggedIn(true);
+        if (res) {
+          console.log(res);
+          setUserData({
+            email: res.data.email,
+          });
+          setLoggedIn(true);
+        }
       });
     }
   };
 
   const signOut = () => {
     localStorage.removeItem("jwt");
+    setUserData([]);
+    setLoggedIn(false);
     history.push("/signin");
   };
 
+  const [infoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
@@ -189,6 +192,7 @@ function App() {
   }
 
   function closeAllPopup() {
+    setInfoTooltipOpen(false);
     setSelectedCard(false);
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -197,12 +201,11 @@ function App() {
 
   return (
     <div className="page">
-      <Header email={userData.email} signOut={signOut} />
+      <Header email={userData.email} onSignOut={signOut} loggedIn={loggedIn} />
 
       <Switch>
         <CurrentUserContext.Provider value={currentUser}>
           <ProtectedRoute
-            exact
             path="/home"
             loggedIn={loggedIn}
             component={Main}
@@ -216,15 +219,15 @@ function App() {
           ></ProtectedRoute>
 
           <Route path="/signin">
-            <Login handleLogin={handleLogin} />
+            <Login onLogin={handleLogin} />
           </Route>
 
           <Route path="/signup">
-            <Register handleRegister={handleRegister} />
+            <Register onRegister={handleRegister} />
           </Route>
 
           <Route>{loggedIn ? <Redirect to="/home" /> : <Redirect to="/signin" />}</Route>
-          <InfoTooltip />
+          <InfoTooltip isOpen={infoTooltipOpen} onClose={closeAllPopup} sucess={userData.email} />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopup}
