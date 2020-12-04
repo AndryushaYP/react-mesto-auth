@@ -1,7 +1,7 @@
 import React from "react";
 import * as auth from "../utils/auth.js";
 
-export default function Login() {
+export default function Login({ handleLogin }) {
   const [data, setData] = React.useState({ password: "", email: "" });
 
   const handleChange = (e) => {
@@ -15,12 +15,18 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     let { password, email } = data;
-    auth.login(password, email);
+    handleLogin(password, email);
   };
 
   return (
     <div className="login">
-      <form action="#" method="POST" className="popup__form popup__form_type_login" noValidate onSubmit={handleSubmit}>
+      <form
+        action="#"
+        method="POST"
+        className="popup__form popup__form_type_login"
+        noValidate
+        onSubmit={handleSubmit}
+      >
         <h2 className="popup__title popup__title_type_login">Вход</h2>
         <label className="popup__label">
           <input

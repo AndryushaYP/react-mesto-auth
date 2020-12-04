@@ -20,26 +20,65 @@ function App() {
   /* Авторизация/регистрация */
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userData, setUserData] = React.useState([]);
+  const history = useHistory();
+
+  React.useEffect(() => {
+    tokenCheck();
+  }, []);
 
   const handleRegister = (password, email) => {
     console.log(password, email);
     auth
       .register(password, email)
       .then((data) => {
-        console.log(data.data._id)
+        console.log(data.data._id);
 
-        if(data.data._id) {
+        if (data.data.email) {
           setUserData({
-            email: data.data.email
-          })
-          setLoggedIn(true);
+            email: data.data.email,
+          });
+          history.push("/signin");
         }
       })
       .catch((err) => {
         console.log(err);
       });
-    /* let history = useHistory();
-    history.push("/signin"); */
+  };
+
+  const handleLogin = (password, email) => {
+    console.log(password, email);
+    auth
+      .login(password, email)
+      .then((data) => {
+        if (data.token) {
+          console.log(data.token);
+          localStorage.setItem("jwt", data.token);
+          setLoggedIn(true);
+          history.push("/home");
+          console.log(userData.email);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const tokenCheck = () => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      auth.getContent(jwt).then((res) => {
+        console.log(res);
+        setUserData({
+          email: res.data.email,
+        });
+        setLoggedIn(true);
+      });
+    }
+  };
+
+  const signOut = () => {
+    localStorage.removeItem("jwt");
+    history.push("/signin");
   };
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
@@ -158,11 +197,12 @@ function App() {
 
   return (
     <div className="page">
-      <Header email={userData.email}/>
+      <Header email={userData.email} signOut={signOut} />
 
       <Switch>
         <CurrentUserContext.Provider value={currentUser}>
           <ProtectedRoute
+            exact
             path="/home"
             loggedIn={loggedIn}
             component={Main}
@@ -176,15 +216,15 @@ function App() {
           ></ProtectedRoute>
 
           <Route path="/signin">
-            <Login />
+            <Login handleLogin={handleLogin} />
           </Route>
 
           <Route path="/signup">
             <Register handleRegister={handleRegister} />
           </Route>
-          <InfoTooltip />
-          <Route>{loggedIn ? <Redirect to="/home" /> : <Redirect to="/signin" />}</Route>
 
+          <Route>{loggedIn ? <Redirect to="/home" /> : <Redirect to="/signin" />}</Route>
+          <InfoTooltip />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopup}
