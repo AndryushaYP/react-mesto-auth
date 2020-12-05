@@ -13,7 +13,7 @@ export default function Login({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { password, email } = data;
+    const { password, email } = data;
     onLogin(password, email);
   };
 
@@ -30,7 +30,7 @@ export default function Login({ onLogin }) {
         <label className="popup__label">
           <input
             placeholder="Email"
-            type="text"
+            type="email"
             name="email"
             className="popup__input popup__input_type_login"
             minLength="2"
@@ -44,7 +44,7 @@ export default function Login({ onLogin }) {
         <label className="popup__label">
           <input
             placeholder="Пароль"
-            type="text"
+            type="password"
             name="password"
             minLength="2"
             maxLength="200"

@@ -20,6 +20,7 @@ function App() {
   /* Авторизация/регистрация */
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userData, setUserData] = React.useState({});
+  const [email, setEmail] = React.useState(false);
   const history = useHistory();
 
   React.useEffect(() => {
@@ -27,19 +28,17 @@ function App() {
   }, []);
 
   const handleRegister = (password, email) => {
-    console.log(password, email);
-
+    setInfoTooltipOpen(true);
     auth
       .register(password, email)
       .then((data) => {
-        setInfoTooltipOpen(true);
         if (data.data.email) {
-          setUserData({ email: data.data.email });
           history.push("/signin");
+          setEmail(true);
         }
       })
       .catch((err) => {
-        setInfoTooltipOpen(true);
+        setEmail(false);
         console.log(err);
       });
   };
@@ -139,12 +138,13 @@ function App() {
       });
   }
 
-  function handleAddPlaceSubmit(newCard) {
+  function handleAddPlaceSubmit(newCard, clearForm) {
     api
       .addCard(newCard)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         setIsAddPlacePopupOpen(false);
+        clearForm();
       })
       .catch((err) => {
         console.log(err);
@@ -163,12 +163,13 @@ function App() {
       });
   }
 
-  function handleUpdateAvatar(userData) {
+  function handleUpdateAvatar(userData, clearForm) {
     api
       .changeUserAvatar(userData)
       .then((userData) => {
         setCurrentUser(userData);
         setIsEditAvatarPopupOpen(false);
+        clearForm();
       })
       .catch((err) => {
         console.log(err);
@@ -227,7 +228,14 @@ function App() {
           </Route>
 
           <Route>{loggedIn ? <Redirect to="/home" /> : <Redirect to="/signin" />}</Route>
-          <InfoTooltip isOpen={infoTooltipOpen} onClose={closeAllPopup} sucess={userData.email} />
+          <InfoTooltip
+            isOpen={infoTooltipOpen}
+            onClose={closeAllPopup}
+            sucess={email}
+            message={
+              email ? "Вы успешно зарегистрировались!" : "Что-то пошло не так! Попробуйте ещё раз."
+            }
+          />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopup}

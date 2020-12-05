@@ -45,10 +45,6 @@ export default function Main({
               onCardClick={onCardClick}
               card={card}
               key={card._id}
-              _id={card._id}
-              name={card.name}
-              link={card.link}
-              likes={card.likes.length}
             />
           ))}
         </ul>

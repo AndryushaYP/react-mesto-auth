@@ -14,7 +14,7 @@ export default function Register({ onRegister }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    let { password, email } = data;
+    const { password, email } = data;
     onRegister(password, email);
   };
 
@@ -31,7 +31,7 @@ export default function Register({ onRegister }) {
         <label className="popup__label">
           <input
             placeholder="Email"
-            type="text"
+            type="email"
             name="email"
             className="popup__input popup__input_type_login"
             required
@@ -43,7 +43,7 @@ export default function Register({ onRegister }) {
         <label className="popup__label">
           <input
             placeholder="Пароль"
-            type="text"
+            type="password"
             name="password"
             className="popup__input popup__input_type_login"
             required

@@ -7,13 +7,16 @@ export default function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    onAddPlace({
-      link: linkRef.current.value,
-      name: nameRef.current.value,
-    });
-
-    nameRef.current.value = "";
-    linkRef.current.value = "";
+    onAddPlace(
+      {
+        link: linkRef.current.value,
+        name: nameRef.current.value,
+      },
+      () => {
+        linkRef.current.value = "";
+        nameRef.current.value = "";
+      }
+    );
   }
 
   return (

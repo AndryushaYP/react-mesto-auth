@@ -7,10 +7,14 @@ export default function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    onUpdateAvatar({
-      avatar: urlRef.current.value,
-    });
-    urlRef.current.value = "";
+    onUpdateAvatar(
+      {
+        avatar: urlRef.current.value,
+      },
+      () => {
+        urlRef.current.value = "";
+      }
+    );
   }
 
   return (

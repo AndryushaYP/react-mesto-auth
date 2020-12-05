@@ -9,6 +9,7 @@ export default function PopupWithForm({
   onClose,
   onSubmit,
 }) {
+
   return (
     <div className={`popup popup_type_${name} ${isOpen && "popup_opened"}`}>
       <form
