@@ -23,10 +23,12 @@ function App() {
   const [email, setEmail] = React.useState(false);
   const history = useHistory();
 
+  /* Проверяем токен при загрузке */
   React.useEffect(() => {
     tokenCheck();
   }, []);
 
+  /* Регистрация пользователя */
   const handleRegister = (password, email) => {
     auth
       .register(password, email)
@@ -44,7 +46,7 @@ function App() {
         setInfoTooltipOpen(true);
       });
   };
-
+  /* Авторизация */
   const handleLogin = (password, email) => {
     console.log(password, email);
     setUserData({ email: email });
@@ -76,7 +78,7 @@ function App() {
       });
     }
   };
-
+  /* Выход */
   const signOut = () => {
     localStorage.removeItem("jwt");
     setUserData([]);
