@@ -28,7 +28,6 @@ function App() {
   }, []);
 
   const handleRegister = (password, email) => {
-    setInfoTooltipOpen(true);
     auth
       .register(password, email)
       .then((data) => {
@@ -40,6 +39,9 @@ function App() {
       .catch((err) => {
         setEmail(false);
         console.log(err);
+      })
+      .finally(() => {
+        setInfoTooltipOpen(true);
       });
   };
 
